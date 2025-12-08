@@ -82,13 +82,20 @@ function CreateTaskForm({
         <h2 className="text-xl font-semibold mb-4">Create Task</h2>
 
         <div className="mb-3">
+<<<<<<< HEAD
           <label className="block text-xs font-medium text-gray-700 mb-1" htmlFor="title">
+=======
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+>>>>>>> 7c10519 (upload coding challenge)
             Title *
           </label>
 
           <input
             type="text"
+<<<<<<< HEAD
             id="title"
+=======
+>>>>>>> 7c10519 (upload coding challenge)
             name="title"
             value={taskData.title}
             onChange={handleChange}
@@ -98,15 +105,22 @@ function CreateTaskForm({
         </div>
 
         <div className="mb-3">
+<<<<<<< HEAD
           <label className="block text-xs font-medium text-gray-700 mb-1"
             htmlFor="description"
           >
+=======
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+>>>>>>> 7c10519 (upload coding challenge)
             Description (optional)
           </label>
 
           <textarea
             name="description"
+<<<<<<< HEAD
             id="description"
+=======
+>>>>>>> 7c10519 (upload coding challenge)
             value={taskData.description}
             onChange={handleChange}
             className="w-full border border-gray-300 px-2 py-1.5 rounded-md text-sm h-20 resize-none focus:ring-blue-500 focus:border-blue-500"
@@ -114,13 +128,20 @@ function CreateTaskForm({
         </div>
 
         <div className="mb-3">
+<<<<<<< HEAD
           <label className="block text-xs font-medium text-gray-700 mb-1"
             htmlFor="status">
+=======
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+>>>>>>> 7c10519 (upload coding challenge)
             Status *
           </label>
 
           <select
+<<<<<<< HEAD
             id="status"
+=======
+>>>>>>> 7c10519 (upload coding challenge)
             name="status"
             value={taskData.status}
             onChange={handleChange}
@@ -135,13 +156,20 @@ function CreateTaskForm({
         </div>
 
         <div className="mb-3">
+<<<<<<< HEAD
           <label className="block text-xs font-medium text-gray-700 mb-1"
             htmlFor="due_at">
+=======
+          <label className="block text-xs font-medium text-gray-700 mb-1">
+>>>>>>> 7c10519 (upload coding challenge)
             Due date *
           </label>
 
           <input
+<<<<<<< HEAD
             id="due_at"
+=======
+>>>>>>> 7c10519 (upload coding challenge)
             type="date"
             name="due_at"
             value={taskData.due_at}
