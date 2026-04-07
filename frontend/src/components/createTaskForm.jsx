@@ -19,23 +19,21 @@ function CreateTaskForm({
 
   useEffect(() => {
     if (initialData && Object.keys(initialData).length > 0) {
-
       setTaskData({
         title: initialData.title ?? "",
         description: initialData.description ?? "",
         status: initialData.status ?? "pending",
         due_at: initialData.due_at ?? "",
-
       });
     }
-  }, [initialData])
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTaskData((prev) => ({
       ...prev,
-      [name]: value
-    }))
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -52,8 +50,7 @@ function CreateTaskForm({
         due_at: taskData.due_at,
       };
 
-
-      const res = await createTask(payload);
+      await createTask(payload);
 
       setSuccessMessage(`Task ${payload.title} was created successfully.`);
 
@@ -76,26 +73,24 @@ function CreateTaskForm({
   };
 
   return (
-    <div className=" flex justify-center items-start mt-10">
-      <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded-lg w-full max-w-sm">
-
+    <div className="flex justify-center items-start mt-10">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white p-6 shadow-md rounded-lg w-full max-w-sm"
+      >
         <h2 className="text-xl font-semibold mb-4">Create Task</h2>
 
         <div className="mb-3">
-<<<<<<< HEAD
-          <label className="block text-xs font-medium text-gray-700 mb-1" htmlFor="title">
-=======
-          <label className="block text-xs font-medium text-gray-700 mb-1">
->>>>>>> 7c10519 (upload coding challenge)
+          <label
+            className="block text-xs font-medium text-gray-700 mb-1"
+            htmlFor="title"
+          >
             Title *
           </label>
 
           <input
             type="text"
-<<<<<<< HEAD
             id="title"
-=======
->>>>>>> 7c10519 (upload coding challenge)
             name="title"
             value={taskData.title}
             onChange={handleChange}
@@ -105,22 +100,16 @@ function CreateTaskForm({
         </div>
 
         <div className="mb-3">
-<<<<<<< HEAD
-          <label className="block text-xs font-medium text-gray-700 mb-1"
+          <label
+            className="block text-xs font-medium text-gray-700 mb-1"
             htmlFor="description"
           >
-=======
-          <label className="block text-xs font-medium text-gray-700 mb-1">
->>>>>>> 7c10519 (upload coding challenge)
             Description (optional)
           </label>
 
           <textarea
-            name="description"
-<<<<<<< HEAD
             id="description"
-=======
->>>>>>> 7c10519 (upload coding challenge)
+            name="description"
             value={taskData.description}
             onChange={handleChange}
             className="w-full border border-gray-300 px-2 py-1.5 rounded-md text-sm h-20 resize-none focus:ring-blue-500 focus:border-blue-500"
@@ -128,20 +117,15 @@ function CreateTaskForm({
         </div>
 
         <div className="mb-3">
-<<<<<<< HEAD
-          <label className="block text-xs font-medium text-gray-700 mb-1"
-            htmlFor="status">
-=======
-          <label className="block text-xs font-medium text-gray-700 mb-1">
->>>>>>> 7c10519 (upload coding challenge)
+          <label
+            className="block text-xs font-medium text-gray-700 mb-1"
+            htmlFor="status"
+          >
             Status *
           </label>
 
           <select
-<<<<<<< HEAD
             id="status"
-=======
->>>>>>> 7c10519 (upload coding challenge)
             name="status"
             value={taskData.status}
             onChange={handleChange}
@@ -150,26 +134,21 @@ function CreateTaskForm({
           >
             <option value="pending">Pending</option>
             <option value="todo">Todo</option>
-            <option value="in_progress">In progress</option>
+            <option value="in progress">In progress</option>
             <option value="done">Done</option>
           </select>
         </div>
 
         <div className="mb-3">
-<<<<<<< HEAD
-          <label className="block text-xs font-medium text-gray-700 mb-1"
-            htmlFor="due_at">
-=======
-          <label className="block text-xs font-medium text-gray-700 mb-1">
->>>>>>> 7c10519 (upload coding challenge)
+          <label
+            className="block text-xs font-medium text-gray-700 mb-1"
+            htmlFor="due_at"
+          >
             Due date *
           </label>
 
           <input
-<<<<<<< HEAD
             id="due_at"
-=======
->>>>>>> 7c10519 (upload coding challenge)
             type="date"
             name="due_at"
             value={taskData.due_at}
@@ -184,18 +163,16 @@ function CreateTaskForm({
           <p className="mt-2 text-sm text-green-600">{successMessage}</p>
         )}
 
-        <button type="submit" disabled={submitting} className="cursor-pointer bg-blue-950 text-white text-sm p-1.5 rounded-sm">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="cursor-pointer bg-blue-950 text-white text-sm p-1.5 rounded-sm"
+        >
           {submitting ? "Saving..." : buttonLabel}
         </button>
-      </form >
+      </form>
     </div>
-
   );
-
-
 }
 
-
-
-
-export default CreateTaskForm
+export default CreateTaskForm;
