@@ -31,3 +31,58 @@ async def get_tasks_query():
     """
     result = await database.fetch_all(query=query)
     return result
+
+
+async def get_task_by_id_query(task_id: int):
+    query = """
+        SELECT * FROM tasks
+        WHERE id = :task_id
+        LIMIT 1;
+    """
+
+    values = {"task_id": task_id}
+
+    task = await database.fetch_one(query=query, values=values)
+
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return task
+
+
+async def delete_task_query(task_id: int):
+    query = """
+        DELETE FROM tasks
+        WHERE id = :task_id
+        RETURNING id;
+    """
+
+    values = {"task_id": task_id}
+
+    deleted = await database.fetch_one(query=query, values=values)
+
+    if deleted is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return {"message": "Task deleted successfully", "task_id": deleted["id"]}
+
+
+async def update_task_status(task_id: int, status: str):
+    query = """
+        UPDATE tasks
+        SET status = :status
+        WHERE id = :task_id
+        RETURNING *;
+    """
+
+    values = {
+        "task_id": task_id,
+        "status": status,
+    }
+
+    updated_task = await database.fetch_one(query=query, values=values)
+
+    if updated_task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    return updated_task
