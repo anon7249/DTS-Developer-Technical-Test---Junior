@@ -27,7 +27,8 @@ async def create_task_query(title: str, description: str, status: str, due_at: d
 
 async def get_tasks_query():
     query = """
-  SELECT * from tasks 
+        SELECT * FROM tasks
+        ORDER BY id DESC;
     """
     result = await database.fetch_all(query=query)
     return result
