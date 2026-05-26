@@ -33,3 +33,5 @@ async def root():
 
 
 app.include_router(routes)
+
+print("testing")
