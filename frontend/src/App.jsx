@@ -13,8 +13,8 @@ function App() {
   const [searchId, setSearchId] = useState("");
   const [selectedTask, setSelectedTask] = useState(null);
   const [error, setError] = useState("");
-
-  const statusOptions = ["pending", "todo", "in progress", "done"];
+  const [showForm, setShowForm] = useState(false);
+  const statusOptions = ["todo", "in progress", "done"];
 
   const fetchTasks = async () => {
     const response = await getAllTasks();
@@ -75,7 +75,15 @@ function App() {
   };
 
   useEffect(() => {
-    fetchTasks();
+    const loadTasks = async () => {
+      try {
+        await fetchTasks();
+      } catch (err) {
+        console.error("Failed to fetch tasks", err);
+      }
+    };
+
+    loadTasks();
   }, []);
 
   return (
@@ -83,7 +91,23 @@ function App() {
       <Banner />
       <div className="p-4 max-w-4xl mx-auto">
         <div className="mt-6">
-          <CreateTaskForm onSuccess={fetchTasks} />
+          <div className="mt-6">
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="bg-blue-950 text-white px-4 py-2 rounded"
+            >
+              {showForm ? "Hide Form" : "Create New Task"}
+            </button>
+
+            {showForm && (
+              <CreateTaskForm
+                onSuccess={() => {
+                  fetchTasks();
+                  setShowForm(false);
+                }}
+              />
+            )}
+          </div>
         </div>
 
         <div className="mt-6 flex gap-2">

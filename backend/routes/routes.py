@@ -7,6 +7,7 @@ from backend.queries.queries import (
     update_task_status,
 )
 from backend.schema.task_schemas import TaskCreate
+from typing import Literal
 
 router = APIRouter()
 
@@ -44,5 +45,5 @@ async def delete_task(task_id: int):
 
 
 @router.put("/api/tasks/{task_id}/status", tags=["Tasks"])
-async def update_status(task_id: int, status: str):
+async def update_status(task_id: int, status: Literal["todo", "in progress", "done"]):
     return await update_task_status(task_id, status)

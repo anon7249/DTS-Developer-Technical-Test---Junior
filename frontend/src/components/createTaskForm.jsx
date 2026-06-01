@@ -9,7 +9,7 @@ function CreateTaskForm({
   const [taskData, setTaskData] = useState({
     title: initialData?.title ?? "",
     description: initialData?.description ?? "",
-    status: initialData?.status ?? "pending",
+    status: initialData?.status ?? "todo",
     due_at: initialData?.due_at ?? "",
   });
 
@@ -22,7 +22,7 @@ function CreateTaskForm({
       setTaskData({
         title: initialData.title ?? "",
         description: initialData.description ?? "",
-        status: initialData.status ?? "pending",
+        status: initialData.status ?? "todo",
         due_at: initialData.due_at ?? "",
       });
     }
@@ -61,7 +61,7 @@ function CreateTaskForm({
       setTaskData({
         title: "",
         description: "",
-        status: "pending",
+        status: "todo",
         due_at: "",
       });
     } catch (err) {
@@ -132,7 +132,6 @@ function CreateTaskForm({
             required
             className="w-full border border-gray-300 px-2 py-1.5 rounded-md text-sm bg-white focus:ring-blue-500 focus:border-blue-500"
           >
-            <option value="pending">Pending</option>
             <option value="todo">Todo</option>
             <option value="in progress">In progress</option>
             <option value="done">Done</option>
