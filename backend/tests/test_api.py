@@ -1,53 +1,156 @@
-from fastapi.testclient import TestClient
+import os
+from unittest.mock import AsyncMock
+
+import pytest
+from fastapi import HTTPException
+from httpx import AsyncClient, ASGITransport
+from datetime import date
 from backend.main import app
+import backend.routes.routes as routes
 
 
-def test_root():
-    with TestClient(app) as client:
-        resp = client.get("/")
-        assert resp.status_code == 200
-        assert resp.json() == {"message": "Hello World"}
+@pytest.mark.asyncio
+async def test_create_task(monkeypatch):
+    mock_create_task = AsyncMock(return_value=1)
+    monkeypatch.setattr(routes, "create_task_query", mock_create_task)
 
-
-def test_create_task_and_get_tasks():
-    payload = {
-        "title": "Test from pytest",
-        "description": "pytest description",
+    task_data = {
+        "title": "Review case documents",
+        "description": "Check uploaded evidence",
         "status": "pending",
-        "due_at": "2025-12-31",
+        "due_at": "2026-06-10",
     }
 
-    with TestClient(app) as client:
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.post("/api/create_task", json=task_data)
 
-        create_resp = client.post("/api/create_task", json=payload)
-        assert create_resp.status_code == 200
+    assert response.status_code == 200
+    assert response.json() == {"Message": "Task created successfully", "task_id": 1}
 
-        get_resp = client.get("/api/get_tasks")
-        assert get_resp.status_code == 200
-        tasks = get_resp.json()
-
-        assert any(t["title"] == "Test from pytest" for t in tasks)
-
-
-def test_create_task_without_status():
-    payload = {
-        "title": "Test from pytest",
-        "description": "pytest description",
-        "due_at": "2025-12-31",
-    }
-
-    with TestClient(app) as client:
-        create_resp = client.post("/api/create_task", json=payload)
-        assert create_resp.status_code == 422
+    mock_create_task.assert_called_once_with(
+        title="Review case documents",
+        description="Check uploaded evidence",
+        status="pending",
+        due_at=date(2026, 6, 10),
+    )
 
 
-def description():
-    payload = {
-        "title": "Test from pytest",
+@pytest.mark.asyncio
+async def test_get_all_tasks(monkeypatch):
+    mock_tasks = [
+        {
+            "id": 1,
+            "title": "Review case documents",
+            "description": "Check uploaded evidence",
+            "status": "pending",
+            "due_at": "2026-06-10",
+        }
+    ]
+
+    mock_get_tasks = AsyncMock(return_value=mock_tasks)
+    monkeypatch.setattr(routes, "get_tasks_query", mock_get_tasks)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.get("/api/get_tasks")
+
+    assert response.status_code == 200
+    assert response.json() == mock_tasks
+    mock_get_tasks.assert_called_once()
+
+
+@pytest.mark.asyncio
+async def test_get_task_by_id(monkeypatch):
+    mock_task = {
+        "id": 1,
+        "title": "Review case documents",
+        "description": "Check uploaded evidence",
         "status": "pending",
-        "due_at": "2025-12-31",
+        "due_at": "2026-06-10",
     }
 
-    with TestClient(app) as client:
-        create_resp = client.post("/api/create_task", json=payload)
-        assert create_resp.status_code == 200
+    mock_get_task = AsyncMock(return_value=mock_task)
+    monkeypatch.setattr(routes, "get_task_by_id_query", mock_get_task)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.get("/api/tasks/1")
+
+    assert response.status_code == 200
+    assert response.json() == mock_task
+    mock_get_task.assert_called_once_with(1)
+
+
+@pytest.mark.asyncio
+async def test_get_task_by_id_not_found(monkeypatch):
+    mock_get_task = AsyncMock(return_value=None)
+    monkeypatch.setattr(routes, "get_task_by_id_query", mock_get_task)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.get("/api/tasks/999")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Task not found"}
+
+
+@pytest.mark.asyncio
+async def test_update_task_status(monkeypatch):
+    updated_task = {
+        "id": 1,
+        "title": "Review case documents",
+        "description": "Check uploaded evidence",
+        "status": "done",
+        "due_at": "2026-06-10",
+    }
+
+    mock_update_status = AsyncMock(return_value=updated_task)
+    monkeypatch.setattr(routes, "update_task_status", mock_update_status)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.put("/api/tasks/1/status?status=done")
+
+    assert response.status_code == 200
+    assert response.json() == updated_task
+    mock_update_status.assert_called_once_with(1, "done")
+
+
+@pytest.mark.asyncio
+async def test_delete_task(monkeypatch):
+    delete_response = {"message": "Task deleted successfully", "task_id": 1}
+
+    mock_delete_task = AsyncMock(return_value=delete_response)
+    monkeypatch.setattr(routes, "delete_task_query", mock_delete_task)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.delete("/api/tasks/1")
+
+    assert response.status_code == 200
+    assert response.json() == delete_response
+    mock_delete_task.assert_called_once_with(1)
+
+
+@pytest.mark.asyncio
+async def test_delete_task_not_found(monkeypatch):
+    mock_delete_task = AsyncMock(
+        side_effect=HTTPException(status_code=404, detail="Task not found")
+    )
+
+    monkeypatch.setattr(routes, "delete_task_query", mock_delete_task)
+
+    async with AsyncClient(
+        transport=ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        response = await client.delete("/api/tasks/999")
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Task not found"}
