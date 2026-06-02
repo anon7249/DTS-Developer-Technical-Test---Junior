@@ -5,6 +5,7 @@ from backend.queries.queries import (
     get_task_by_id_query,
     delete_task_query,
     update_task_status,
+    get_tasks_by_status,
 )
 from backend.schema.task_schemas import TaskCreate
 from typing import Literal

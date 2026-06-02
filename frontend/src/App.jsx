@@ -8,6 +8,7 @@ import {
 } from "./api/api";
 import Banner from "./components/Banner";
 
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [searchId, setSearchId] = useState("");
@@ -15,6 +16,7 @@ function App() {
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
   const statusOptions = ["todo", "in progress", "done"];
+
 
   const fetchTasks = async () => {
     const response = await getAllTasks();
@@ -109,7 +111,6 @@ function App() {
             )}
           </div>
         </div>
-
         <div className="mt-6 flex gap-2">
           <input
             type="number"
@@ -134,6 +135,7 @@ function App() {
         </div>
 
         {error && <p className="text-red-500 mt-2">{error}</p>}
+
 
         <h2 className="text-xl font-semibold mt-10 mb-3">
           {selectedTask ? "Selected Task" : "All Tasks"}

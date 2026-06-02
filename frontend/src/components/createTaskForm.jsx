@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createTask } from "../api/api";
 
 function CreateTaskForm({
@@ -16,17 +16,6 @@ function CreateTaskForm({
   const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-
-  useEffect(() => {
-    if (initialData && Object.keys(initialData).length > 0) {
-      setTaskData({
-        title: initialData.title ?? "",
-        description: initialData.description ?? "",
-        status: initialData.status ?? "todo",
-        due_at: initialData.due_at ?? "",
-      });
-    }
-  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
